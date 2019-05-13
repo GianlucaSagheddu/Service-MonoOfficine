@@ -15,7 +15,19 @@ app.use(function(req, res, next){
 
 
 app.post('/Segnala', function (req, res) {
-
+    MongoClient.connect('mongodb+srv://Admin:MMkj9Xy0HIEpBmz6@gianluca-0fshc.mongodb.net/test?retryWrites=true,{useNewUrlParser: true}', function(err, db) {
+        if (err) {
+            throw err;
+        }
+        var dbo = db.db("Tecnologie");
+        var myInfo = { ID: req.body.ID };
+        var newData = { $set: {Segnalazioni: { $push: { Data: new Date(), Descrizione: req.body.desc, Stato: null } } } };
+        dbo.collection("Interventi118").updateOne(myInfo, newData, function(err, result) {
+            if (err) throw err;
+            res.send({n: result.result.n})
+            db.close();
+        });
+    });
 });
 
 
@@ -27,7 +39,7 @@ app.post('/NoleggiaMono', function (req, res) {
 
 
 app.post('/PrenotaS', function (req, res) {
-
+    
 });
 
 
