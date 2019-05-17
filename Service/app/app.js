@@ -1,10 +1,13 @@
 var express = require('express');
 var app = express();
+var MongoClient = require('mongodb').MongoClient;
 
 
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.set('views', './views');
 
 app.use(function(req, res, next){
     res.header("Access-Control-Allow-Origin", "*");
@@ -19,10 +22,10 @@ app.post('/Segnala', function (req, res) {
         if (err) {
             throw err;
         }
-        var dbo = db.db("Tecnologie");
+        var dbo = db.db("MonoOfficine");
         var myInfo = { ID: req.body.ID };
         var newData = { $set: {Segnalazioni: { $push: { Data: new Date(), Descrizione: req.body.desc, Stato: null } } } };
-        dbo.collection("Interventi118").updateOne(myInfo, newData, function(err, result) {
+        dbo.collection("Mezzi").updateOne(myInfo, newData, function(err, result) {
             if (err) throw err;
             res.send({n: result.result.n})
             db.close();
@@ -88,4 +91,8 @@ app.get('/GetMezzi', function (req, res) {
 
 app.get('/GetOfferte', function (req, res) {
 
+});
+
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!');
 });
