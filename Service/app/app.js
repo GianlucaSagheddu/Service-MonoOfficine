@@ -18,17 +18,18 @@ app.use(function(req, res, next){
 
 
 app.post('/Segnala', function (req, res) {
-    console.log("1");
+
     MongoClient.connect('mongodb+srv://Admin:MMkj9Xy0HIEpBmz6@gianluca-0fshc.mongodb.net/test?retryWrites=true,{useNewUrlParser: true}', function(err, db) {
         if (err) {
             throw err;
         }
+        
         var dbo = db.db("MonoOfficine");
         var myInfo = { ID: parseInt(req.body.ID) };
         var newData = { $push: {Segnalazioni: { Data: new Date(), Descrizione: req.body.desc, Stato: null } } } ;
         dbo.collection("Mezzi").updateOne(myInfo, newData, function(err, result) {
             if (err) throw err;
-            console.log(result);
+
             res.send({n: result.result.n})
             db.close();
         });
@@ -43,7 +44,7 @@ app.post('/NoleggiaMono', function (req, res) {
             throw err;
         }
         var dbo = db.db("MonoOfficine");
-        var myInfo = { ID: req.body.ID };
+        var myInfo = { ID: parseInt(req.body.ID) };
         var newData = { $set: { Stato: false } };
         dbo.collection("Mezzi").updateOne(myInfo, newData, function(err, result) {
             if (err) throw err;
@@ -62,7 +63,7 @@ app.post('/BloccaMono', function (req, res) {
             throw err;
         }
         var dbo = db.db("MonoOfficine");
-        var myInfo = { ID: req.body.ID };
+        var myInfo = { ID: parseInt(req.body.ID) };
         var newData = { $set: { Stato: true } };
         dbo.collection("Mezzi").updateOne(myInfo, newData, function(err, result) {
             if (err) throw err;
@@ -86,8 +87,8 @@ app.post('/PartecipaS', function (req, res) {
             throw err;
         }
         var dbo = db.db("MonoOfficine");
-        var myInfo = { Id: req.body.IdRichiesta };
-        var newData = { $set: { IdPartecipante: req.body.IdUtente } };
+        var myInfo = { Id: parseInt(req.body.IdRichiesta) };
+        var newData = { $set: { IdPartecipante: parseInt(req.body.IdUtente) } };
         dbo.collection("Passaggi").updateOne(myInfo, newData, function(err, result) {
             if (err) throw err;
             res.send({n: result.result.n})
