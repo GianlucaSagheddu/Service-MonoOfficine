@@ -163,6 +163,7 @@ app.get('/GetMezzi', function (req, res) {
 
 
 
+
 app.get('/GetOfferte', function (req, res) {
     MongoClient.connect('mongodb+srv://Admin:MMkj9Xy0HIEpBmz6@gianluca-0fshc.mongodb.net/test?retryWrites=true,{useNewUrlParser: true}', function(err, db) {
         if (err) {
@@ -178,6 +179,8 @@ app.get('/GetOfferte', function (req, res) {
         });
     });
 });
+
+
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
