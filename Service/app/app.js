@@ -56,6 +56,23 @@ app.post('/NoleggiaMono', function (req, res) {
 });
 
 
+app.post('/BloccaMono', function (req, res) {
+    MongoClient.connect('mongodb+srv://Admin:MMkj9Xy0HIEpBmz6@gianluca-0fshc.mongodb.net/test?retryWrites=true,{useNewUrlParser: true}', function(err, db) {
+        if (err) {
+            throw err;
+        }
+        var dbo = db.db("MonoOfficine");
+        var myInfo = { ID: req.body.ID };
+        var newData = { $set: { Stato: true } };
+        dbo.collection("Mezzi").updateOne(myInfo, newData, function(err, result) {
+            if (err) throw err;
+            res.send({n: result.result.n})
+            db.close();
+        });
+
+
+    });
+});
 
 app.post('/PrenotaS', function (req, res) {
 
@@ -64,7 +81,21 @@ app.post('/PrenotaS', function (req, res) {
 
 
 app.post('/PartecipaS', function (req, res) {
+    MongoClient.connect('mongodb+srv://Admin:MMkj9Xy0HIEpBmz6@gianluca-0fshc.mongodb.net/test?retryWrites=true,{useNewUrlParser: true}', function(err, db) {
+        if (err) {
+            throw err;
+        }
+        var dbo = db.db("MonoOfficine");
+        var myInfo = { Id: req.body.IdRichiesta };
+        var newData = { $set: { IdPartecipante: req.body.IdUtente } };
+        dbo.collection("Passaggi").updateOne(myInfo, newData, function(err, result) {
+            if (err) throw err;
+            res.send({n: result.result.n})
+            db.close();
+        });
 
+
+    });
 });
 
 
@@ -79,7 +110,7 @@ app.get('/GetMezzi', function (req, res) {
             throw err;
         }
         var dbo = db.db("MonoOfficine");
-        dbo.collection("Mezzi").find({InterventoTipo: tipo, anno: anno}).sort({InterventoTipo:1}).toArray(function(err, result) {
+        dbo.collection("Mezzi").find({ Stato: true }, { _id: 0, Segnalazioni: 0, Credenziali: 0 }).sort({InterventoTipo:1}).toArray(function(err, result) {
             if (err) {
                 throw err;
             }
@@ -92,7 +123,19 @@ app.get('/GetMezzi', function (req, res) {
 
 
 app.get('/GetOfferte', function (req, res) {
-
+    MongoClient.connect('mongodb+srv://Admin:MMkj9Xy0HIEpBmz6@gianluca-0fshc.mongodb.net/test?retryWrites=true,{useNewUrlParser: true}', function(err, db) {
+        if (err) {
+            throw err;
+        }
+        var dbo = db.db("MonoOfficine");
+        dbo.collection("Passaggi").find({ IdPartecipante: null }, { _id: 0, IdPartecipante: 0, IdProponente: 1, Id: 1, Percorso: 1, Data: 1 }).toArray(function(err, result) {
+            if (err) {
+                throw err;
+            }
+            res.send(result);
+            db.close();
+        });
+    });
 });
 
 app.listen(3000, function () {
