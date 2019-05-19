@@ -48,7 +48,7 @@ app.post('/NoleggiaMono', function (req, res) {
             throw err;
         }
         var dbo = db.db("MonoOfficine");
-        var myInfo = { ID: parseInt(req.body.ID) };
+        var myInfo = { ID: parseInt(req.body.IdMezzo) };
         var newData = { $set: { Stato: false } };
         dbo.collection("Mezzi").updateOne(myInfo, newData, function(err, result) {
             if (err) throw err;
@@ -69,7 +69,7 @@ app.post('/BloccaMono', function (req, res) {
             throw err;
         }
         var dbo = db.db("MonoOfficine");
-        var myInfo = { ID: parseInt(req.body.ID) };
+        var myInfo = { ID: parseInt(req.body.IdMezzo) };
         var newData = { $set: { Stato: true } };
         dbo.collection("Mezzi").updateOne(myInfo, newData, function(err, result) {
             if (err) throw err;
@@ -99,7 +99,7 @@ app.post('/PrenotaS', function (req, res) {
             }
             var dbo1 = db.db("MonoOfficine");
 
-            var myInfo = { IdProponente: parseInt(req.body.IdUtente), IdPartecipante: null, Id: result1[0].Id + 1, Percorso: { type: "Feature", geometry: [ { type: "LineString", coordinates: [ [ req.body.LatI, req.body.LongI ], [ req.body.LatF, req.body.LongF ] ] } ] }, Data: new Date(req.body.Data) };
+            var myInfo = { IdProponente: parseInt(req.body.IdUtente), IdPartecipante: null, Id: result1[0].Id + 1, Percorso: { type: "Feature", geometry: [ { type: "LineString", coordinates: [ req.body.CoordI, req.body.CoordF ] } ] }, Data: new Date(req.body.Data) };
             dbo1.collection("Passaggi").insertOne(myInfo, function(err, result2) {
                 if (err) throw err;
                 res.send({n: result2.result.n})
