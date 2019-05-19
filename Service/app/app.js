@@ -23,7 +23,7 @@ app.post('/Segnala', function (req, res) {
         if (err) {
             throw err;
         }
-        
+
         var dbo = db.db("MonoOfficine");
         var myInfo = { ID: parseInt(req.body.ID) };
         var newData = { $push: {Segnalazioni: { Data: new Date(), Descrizione: req.body.desc, Stato: null } } } ;
@@ -76,8 +76,36 @@ app.post('/BloccaMono', function (req, res) {
 });
 
 app.post('/PrenotaS', function (req, res) {
+    MongoClient.connect('mongodb+srv://Admin:MMkj9Xy0HIEpBmz6@gianluca-0fshc.mongodb.net/test?retryWrites=true,{useNewUrlParser: true}', function(err, db) {
+        if (err) {
+            throw err;
+        }
+        var dbo = db.db("MonoOfficine");
 
+
+        dbo.collection("Passaggi").find().sort({Id:-1}).toArray(function(err, result1) {
+            if (err) {
+                throw err;
+            }
+            var dbo1 = db.db("MonoOfficine");
+
+            var myInfo = { IdProponente: parseInt(req.body.IdUtente), IdPartecipante: null, Id: result1[0].Id + 1, Percorso: { type: "Feature", geometry: [ { type: "LineString", coordinates: [ [ req.body.LatI, req.body.LongI ], [ req.body.LatF, req.body.LongF ] ] } ] }, Data: new Date(req.body.Data) };
+            dbo1.collection("Passaggi").insertOne(myInfo, function(err, result2) {
+                if (err) throw err;
+                res.send({n: result2.result.n})
+                db.close();
+            });
+        });
+
+
+
+
+
+    });
 });
+
+
+
 
 
 
@@ -103,6 +131,8 @@ app.post('/PartecipaS', function (req, res) {
 
 
 
+
+
 // GET REQUESTS
 
 app.get('/GetMezzi', function (req, res) {
@@ -111,7 +141,7 @@ app.get('/GetMezzi', function (req, res) {
             throw err;
         }
         var dbo = db.db("MonoOfficine");
-        dbo.collection("Mezzi").find({ Stato: true }, { _id: 0, Segnalazioni: 0, Credenziali: 0 }).sort({InterventoTipo:1}).toArray(function(err, result) {
+        dbo.collection("Mezzi").find({ Stato: true }, { _id: 0, Segnalazioni: 0, Credenziali: 0 }).toArray(function(err, result) {
             if (err) {
                 throw err;
             }
