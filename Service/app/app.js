@@ -19,7 +19,8 @@ app.use(function(req, res, next){
 
 
 app.post('/Segnala', function (req, res) {
-
+    console.log("1");
+    console.log(req.body);
     MongoClient.connect('mongodb+srv://Admin:MMkj9Xy0HIEpBmz6@gianluca-0fshc.mongodb.net/test?retryWrites=true,{useNewUrlParser: true}', function(err, db) {
         if (err) {
             throw err;
