@@ -64,7 +64,7 @@ app.post('/NoleggiaMono', function (req, res) {
 
 
 
-app.post('/BloccaMono', function (req, res) {
+app.put('/BloccaMono', function (req, res) {
     MongoClient.connect('mongodb+srv://Admin:MMkj9Xy0HIEpBmz6@gianluca-0fshc.mongodb.net/test?retryWrites=true,{useNewUrlParser: true}', function(err, db) {
         if (err) {
             throw err;
@@ -74,7 +74,7 @@ app.post('/BloccaMono', function (req, res) {
         var newData = { $set: { Stato: true } };
         dbo.collection("Mezzi").updateOne(myInfo, newData, function(err, result) {
             if (err) throw err;
-            res.send({n: result.result.n})
+            res.send({n: result.result.n});
             db.close();
         });
 
@@ -120,7 +120,7 @@ app.post('/PrenotaS', function (req, res) {
 
 
 
-app.post('/PartecipaS', function (req, res) {
+app.put('/PartecipaS', function (req, res) {
     MongoClient.connect('mongodb+srv://Admin:MMkj9Xy0HIEpBmz6@gianluca-0fshc.mongodb.net/test?retryWrites=true,{useNewUrlParser: true}', function(err, db) {
         if (err) {
             throw err;
